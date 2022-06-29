@@ -1,0 +1,379 @@
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Staff`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Staff` (
+  `StaffID` INT NOT NULL,
+  `Staff_Fname` VARCHAR(45) NOT NULL,
+  `Staff_Lname` VARCHAR(45) NOT NULL,
+  `Staff_DOB` DATE NOT NULL,
+  `Staff_PhoneNumber` VARCHAR(45) NOT NULL,
+  `Staff_Address` VARCHAR(45) NOT NULL,
+  `Staff_Department` VARCHAR(45) NOT NULL,
+  `Staff_Email` VARCHAR(45) NOT NULL,
+  `Staff_SalaryPerMonth` DECIMAL(8,2) NOT NULL,
+  PRIMARY KEY (`StaffID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Client`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Client` (
+  `ClientID` INT NOT NULL,
+  `Client_Fname` VARCHAR(45) NOT NULL,
+  `Client_Lname` VARCHAR(45) NOT NULL,
+  `Client_PhoneNumber` VARCHAR(11) NOT NULL,
+  `Client_Email` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`ClientID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Event`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Event` (
+  `EventID` INT NOT NULL,
+  `Staff_StaffID` INT NOT NULL,
+  `Client_ClientID` INT NOT NULL,
+  `Event_Name` VARCHAR(45) NOT NULL,
+  `Event_Date` DATE NOT NULL,
+  `Event_StartTime` TIME NOT NULL,
+  PRIMARY KEY (`EventID`),
+  INDEX `fk_Event_Staff1_idx` (`Staff_StaffID` ASC),
+  INDEX `fk_Event_Client1_idx` (`Client_ClientID` ASC),
+  CONSTRAINT `fk_Event_Staff1`
+    FOREIGN KEY (`Staff_StaffID`)
+    REFERENCES `schleppadoo`.`Staff` (`StaffID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Event_Client1`
+    FOREIGN KEY (`Client_ClientID`)
+    REFERENCES `schleppadoo`.`Client` (`ClientID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Sponsor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Sponsor` (
+  `Sponsor` INT NOT NULL,
+  `Sponsor_Name` VARCHAR(45) NOT NULL,
+  `Sponsor_ContactNumber` VARCHAR(45) NOT NULL,
+  `Sponsor_Email` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`Sponsor`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Entertainer`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Entertainer` (
+  `EntertainerID` INT NOT NULL,
+  `Entertainer_Fname` VARCHAR(45) NOT NULL,
+  `Entertainer_Lname` VARCHAR(45) NOT NULL,
+  `Entertainer_ContactNumber` VARCHAR(45) NOT NULL,
+  `Entertainer_Email` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`EntertainerID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`LocalAuthority`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`LocalAuthority` (
+  `LocalAuthorityID` INT NOT NULL,
+  `LocalAuthority_Name` VARCHAR(45) NOT NULL,
+  `LocalAuthority_ContactNumber` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`LocalAuthorityID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`MerchandiseType`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`MerchandiseType` (
+  `MerchandiseTypeID` INT NOT NULL,
+  `MerchandiseType_Price` DECIMAL(8,2) NOT NULL,
+  `MerchandiseType_Quantity` VARCHAR(45) NOT NULL,
+  `MerchandiseType_Name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`MerchandiseTypeID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Participant`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Participant` (
+  `ParticipantID` INT NOT NULL,
+  `Event_EventID` INT NOT NULL,
+  `Participant_Fname` VARCHAR(45) NOT NULL,
+  `Participant_Lname` VARCHAR(45) NOT NULL,
+  `Participant_PhoneNumber` VARCHAR(45) NOT NULL,
+  `Participant_Age` INT NOT NULL,
+  `Participant_Paid` VARCHAR(45) NOT NULL,
+  `Participant_EmergencyNumberOne` VARCHAR(45) NOT NULL,
+  `Particpant_EmergencyNumberTwo` VARCHAR(45) NOT NULL,
+  `Participant_DietaryRequirements` VARCHAR(45) NOT NULL,
+  `Participant_MoneyRaised` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`ParticipantID`),
+  INDEX `fk_Participant_Event1_idx` (`Event_EventID` ASC),
+  CONSTRAINT `fk_Participant_Event1`
+    FOREIGN KEY (`Event_EventID`)
+    REFERENCES `schleppadoo`.`Event` (`EventID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Location`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Location` (
+  `LocationID` INT NOT NULL,
+  `Event_EventID` INT NOT NULL,
+  `Location_StreetAddress` VARCHAR(45) NOT NULL,
+  `Location_City` VARCHAR(45) NOT NULL,
+  `Location_Venue` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`LocationID`),
+  INDEX `fk_Location_Event1_idx` (`Event_EventID` ASC),
+  CONSTRAINT `fk_Location_Event1`
+    FOREIGN KEY (`Event_EventID`)
+    REFERENCES `schleppadoo`.`Event` (`EventID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`MedicalStaff`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`MedicalStaff` (
+  `MedicalStaffID` INT NOT NULL,
+  `Location_LocationID` INT NOT NULL,
+  `MedicalStaff_Qualification` VARCHAR(45) NOT NULL,
+  `MedicalStaff_TimeQualAcquired` DATE NOT NULL,
+  `MedicalStaff_Fname` VARCHAR(45) NOT NULL,
+  `MedicalStaff_Lname` VARCHAR(45) NOT NULL,
+  `MedicalStaff_Email` VARCHAR(45) NOT NULL,
+  `MedicalStaff_Address` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`MedicalStaffID`),
+  INDEX `fk_MedicalStaff_Location1_idx` (`Location_LocationID` ASC),
+  CONSTRAINT `fk_MedicalStaff_Location1`
+    FOREIGN KEY (`Location_LocationID`)
+    REFERENCES `schleppadoo`.`Location` (`LocationID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Volunteer`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Volunteer` (
+  `VolunteerID` INT NOT NULL,
+  `Location_LocationID` INT NOT NULL,
+  `Volunteer_Fname` VARCHAR(45) NOT NULL,
+  `Volunteer_Lname` VARCHAR(45) NOT NULL,
+  `Volunteer_FirstAidQual` TINYINT(1) NOT NULL,
+  `Volunteer_PhoneNumber` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`VolunteerID`),
+  INDEX `fk_Volunteer_Location1_idx` (`Location_LocationID` ASC),
+  CONSTRAINT `fk_Volunteer_Location1`
+    FOREIGN KEY (`Location_LocationID`)
+    REFERENCES `schleppadoo`.`Location` (`LocationID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Invoice`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Invoice` (
+  `InvoiceID` INT NOT NULL,
+  `Client_ClientID` INT NOT NULL,
+  `Invoice_TotalCost` DECIMAL(8,2) NOT NULL,
+  `Invoice_TotalSpent` DECIMAL(8,2) NOT NULL,
+  `Invoice_TotalRevenue` DECIMAL(8,2) NOT NULL,
+  PRIMARY KEY (`InvoiceID`),
+  INDEX `fk_Invoice_Client1_idx` (`Client_ClientID` ASC),
+  CONSTRAINT `fk_Invoice_Client1`
+    FOREIGN KEY (`Client_ClientID`)
+    REFERENCES `schleppadoo`.`Client` (`ClientID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Participant_has_Location`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Participant_has_Location` (
+  `Participant_ParticipantID` INT NOT NULL,
+  `Location_LocationID` INT NOT NULL,
+  PRIMARY KEY (`Participant_ParticipantID`, `Location_LocationID`),
+  INDEX `fk_Participant_has_Location_Location1_idx` (`Location_LocationID` ASC),
+  INDEX `fk_Participant_has_Location_Participant1_idx` (`Participant_ParticipantID` ASC),
+  CONSTRAINT `fk_Participant_has_Location_Participant1`
+    FOREIGN KEY (`Participant_ParticipantID`)
+    REFERENCES `schleppadoo`.`Participant` (`ParticipantID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Participant_has_Location_Location1`
+    FOREIGN KEY (`Location_LocationID`)
+    REFERENCES `schleppadoo`.`Location` (`LocationID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Event_has_LocalAuthority`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Event_has_LocalAuthority` (
+  `Event_EventID` INT NOT NULL,
+  `LocalAuthority_LocalAuthorityID` INT NOT NULL,
+  PRIMARY KEY (`Event_EventID`, `LocalAuthority_LocalAuthorityID`),
+  INDEX `fk_Event_has_LocalAuthority_LocalAuthority1_idx` (`LocalAuthority_LocalAuthorityID` ASC),
+  INDEX `fk_Event_has_LocalAuthority_Event1_idx` (`Event_EventID` ASC),
+  CONSTRAINT `fk_Event_has_LocalAuthority_Event1`
+    FOREIGN KEY (`Event_EventID`)
+    REFERENCES `schleppadoo`.`Event` (`EventID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Event_has_LocalAuthority_LocalAuthority1`
+    FOREIGN KEY (`LocalAuthority_LocalAuthorityID`)
+    REFERENCES `schleppadoo`.`LocalAuthority` (`LocalAuthorityID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Event_has_Entertainer`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Event_has_Entertainer` (
+  `Event_EventID` INT NOT NULL,
+  `Entertainer_EntertainerID` INT NOT NULL,
+  PRIMARY KEY (`Event_EventID`, `Entertainer_EntertainerID`),
+  INDEX `fk_Event_has_Entertainer_Entertainer1_idx` (`Entertainer_EntertainerID` ASC),
+  INDEX `fk_Event_has_Entertainer_Event1_idx` (`Event_EventID` ASC),
+  CONSTRAINT `fk_Event_has_Entertainer_Event1`
+    FOREIGN KEY (`Event_EventID`)
+    REFERENCES `schleppadoo`.`Event` (`EventID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Event_has_Entertainer_Entertainer1`
+    FOREIGN KEY (`Entertainer_EntertainerID`)
+    REFERENCES `schleppadoo`.`Entertainer` (`EntertainerID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Event_has_Sponsor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Event_has_Sponsor` (
+  `Event_EventID` INT NOT NULL,
+  `Sponsor_Sponsor` INT NOT NULL,
+  PRIMARY KEY (`Event_EventID`, `Sponsor_Sponsor`),
+  INDEX `fk_Event_has_Sponsor_Sponsor1_idx` (`Sponsor_Sponsor` ASC),
+  INDEX `fk_Event_has_Sponsor_Event1_idx` (`Event_EventID` ASC),
+  CONSTRAINT `fk_Event_has_Sponsor_Event1`
+    FOREIGN KEY (`Event_EventID`)
+    REFERENCES `schleppadoo`.`Event` (`EventID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Event_has_Sponsor_Sponsor1`
+    FOREIGN KEY (`Sponsor_Sponsor`)
+    REFERENCES `schleppadoo`.`Sponsor` (`Sponsor`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `schleppadoo`.`Event_has_MerchandiseType`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `schleppadoo`.`Event_has_MerchandiseType` (
+  `Event_EventID` INT NOT NULL,
+  `MerchandiseType_MerchandiseTypeID` INT NOT NULL,
+  PRIMARY KEY (`Event_EventID`, `MerchandiseType_MerchandiseTypeID`),
+  INDEX `fk_Event_has_MerchandiseType_MerchandiseType1_idx` (`MerchandiseType_MerchandiseTypeID` ASC),
+  INDEX `fk_Event_has_MerchandiseType_Event1_idx` (`Event_EventID` ASC),
+  CONSTRAINT `fk_Event_has_MerchandiseType_Event1`
+    FOREIGN KEY (`Event_EventID`)
+    REFERENCES `schleppadoo`.`Event` (`EventID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Event_has_MerchandiseType_MerchandiseType1`
+    FOREIGN KEY (`MerchandiseType_MerchandiseTypeID`)
+    REFERENCES `schleppadoo`.`MerchandiseType` (`MerchandiseTypeID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+
+UPDATE Customers
+SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+WHERE CustomerID = 1;
+
+
+
+
+
+QUERIES
+SELECT SUM(Invoice_TotalCost) AS TotalMoneyMade FROM Invoice;
+
+ASHLEY PERRY PART DOESNT DO ANYTHING
+SELECT Invoice_TotalCost, Invoice_TotalSpent, Invoice_TotalRevenue,
+Invoice_TotalRevenue - (Invoice_TotalCost + Invoice_TotalSpent) AS Profit 
+From Invoice
+INNER JOIN Client on Invoice.Client_ClientID = Client_ClientID
+Where Client_Fname = 'Ashley' and Client_Lname = 'Perry';
+
+DOESNT WORK
+SELECT Invoice_TotalCost, Invoice_TotalSpent, Invoice_TotalRevenue,
+Invoice_TotalRevenue - (Invoice_TotalCost + Invoice_TotalSpent) AS Profit 
+From Invoice
+INNER JOIN Client on Invoice.Client_ClientID = Client_ClientID
+Where Invoice.Client_ClientID = 1;
+
+SHOW EVERYONE ATTENDING AN EVENT
+SELECT Participant.Participant_Fname, Participant.Participant_Lname
+From Participant
+INNER JOIN Event on Participant.Event_EventID = Event.EventID
+Where EventID = 2;
+
+CONTACT EVERYONE THAT AN EVENT ISNT HAPPENING -----------------------------
+SELECT Participant.Participant_Fname, Participant.Participant_Lname, Participant.Participant_PhoneNumber
+From Participant
+INNER JOIN Event on Participant.Event_EventID = Event.EventID
+Where EventID = 2;
+
+SHOWS EVERY EVENT A SPONSOR HAS SPONSORED --------------------------------
+SELECT Sponsor.Sponsor_Name, Sponsor.Sponsor_ContactNumber, Sponsor.Sponsor_Email, Event.Event_Name, Event.Event_Date
+From Sponsor, Event_has_Sponsor
+INNER JOIN Event on Event_has_Sponsor.Event_EventID = Event.EventID
+Where EventID = 2;
+
+SELECT Sponsor.Sponsor_Name, Sponsor.Sponsor_ContactNumber, Sponsor.Sponsor_Email, Event.Event_Name
+From Sponsor, Event_has_Sponsor
+INNER JOIN Event on Event_has_Sponsor.Event_EventID = Event.EventID
+Where EventID = 2;
+
+SELECT Event.Client_ClientID, Client.ClientID, Invoice.Client_ClientID, Invoice_TotalCost, Invoice_TotalSpent, Invoice_TotalRevenue,
+Invoice_TotalRevenue - (Invoice_TotalCost + Invoice_TotalSpent) AS Profit 
+From Client
+JOIN Invoice on (Client.ClientID = Invoice.Client_ClientID)
+JOIN Event on (Event.Client_ClientID = Client.ClientID);
+
+FOR EACH EVENT, YOU CAN  SEE HOW MUCH PROFIT WAS MADE -----------------------
+SELECT Event.Event_Name, Invoice_TotalCost, Invoice_TotalSpent, Invoice_TotalRevenue,
+Invoice_TotalRevenue - (Invoice_TotalCost + Invoice_TotalSpent) AS Profit 
+From Client
+JOIN Invoice on (Client.ClientID = Invoice.Client_ClientID)
+JOIN Event on (Event.Client_ClientID = Client.ClientID);
+
+

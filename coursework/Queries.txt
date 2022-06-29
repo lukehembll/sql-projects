@@ -1,0 +1,60 @@
+//FOR CRIMES_______________________________________________________________________________________
+//Average number of crimes per region with a specific type of crime
+SELECT Location.Region, Time_Of_Crime.Month, Crime_Category.Crime_Category AS 'Type Of Crime', ROUND (AVG(No_Of_Crimes),0) AS 'Average Number Of Crimes' FROM Fact_About_Crimes
+JOIN Location on Fact_About_Crimes.Location_Location_id = Location.Location_id
+JOIN Time_Of_Crime on Fact_About_Crimes.Time_Of_Crime_Time_Of_Crime_id = Time_Of_Crime.Time_Of_Crime_id
+JOIN Crime_Category on Fact_About_Crimes.Crime_Category_Crime_Category_id = Crime_Category.Crime_Category_id
+WHERE (Crime_Category_Crime_Category_id = 1) AND (Time_Of_Crime.Month = 1)
+GROUP BY Location_Location_id;
+
+//Average number of crimes per month for a specific region
+SELECT Time_Of_Crime.Month, Location.Region, ROUND (AVG(No_Of_Crimes),0) AS 'Average Number Of Crimes' FROM Fact_About_Crimes
+JOIN Time_Of_Crime on Fact_About_Crimes.Time_Of_Crime_Time_Of_Crime_id = Time_Of_Crime.Time_Of_Crime_id
+JOIN Location on Fact_About_Crimes.Location_Location_id = Location.Location_id
+WHERE (Location_Location_id = 7)
+GROUP BY Time_Of_Crime.Month;
+
+//All Cases Where crime rate is 100 and above
+SELECT Location.Region, Time_Of_Crime.Month, Time_Of_Crime.Year, Crime_Category.Crime_Category AS 'Crime Category', No_Of_Crimes AS 'Number Of Crimes' FROM Fact_About_Crimes
+JOIN Location on Fact_About_Crimes.Location_Location_id = Location.Location_id
+JOIN Time_Of_Crime on Fact_About_Crimes.Time_Of_Crime_Time_Of_Crime_id = Time_Of_Crime.Time_Of_Crime_id
+JOIN Crime_Category on Fact_About_Crimes.Crime_Category_Crime_Category_id = Crime_Category.Crime_Category_id
+WHERE (No_Of_Crimes >= 100) ORDER BY (Time_Of_Crime_Time_Of_Crime_id);
+
+
+SELECT Time_Of_Crime.Month, City.City, ROUND (AVG(No_Of_Crimes),0) AS 'Average Number Of Crimes' FROM Fact_About_Crimes
+JOIN Time_Of_Crime on Fact_About_Crimes.Time_Of_Crime_Time_Of_Crime_id = Time_Of_Crime.Time_Of_Crime_id
+JOIN Location on Fact_About_Crimes.Location_Location_id = Location.Location_id
+JOIN City on Location.Location_id = City.Location_Location_id
+WHERE (Fact_About_Crimes.Time_Of_Crime_Time_Of_Crime_id = 5);
+
+	
+	
+	
+//FOR EMERGENCY CALLS____________________________________________________________________________________________
+//Average number of calls per station
+SELECT Station.Station AS 'Station Name', ROUND (AVG(No_Of_Calls),0) AS 'Average Number Of Calls' FROM Fact_About_EmergencyCalls
+JOIN Station on Fact_About_EmergencyCalls.Station_Station_id = Station.Station_id
+GROUP BY Station.Station_id
+HAVING (AVG(No_Of_Calls) > 36)
+ORDER BY AVG(No_Of_Calls);
+
+//Number of calls for each category at a specific station
+SELECT Station.Station AS 'Station Name', ROUND (AVG(No_Of_Calls),0) AS 'Average Number Of Calls', Crime_Category.Crime_Category AS 'Type Of Crime' FROM Fact_About_EmergencyCalls
+JOIN Station on Fact_About_EmergencyCalls.Station_Station_id = Station.Station_id
+JOIN Crime_Category on Fact_About_EmergencyCalls.Crime_Category_Crime_Category_id = Crime_Category.Crime_Category_id
+WHERE (Station_Station_id = 17)
+GROUP BY Crime_Category.Crime_Category;
+
+//Number of calls and staff available each month over two years, grouped by month
+SELECT Time_Of_Crime.Month, Station.Station, ROUND(AVG(No_Of_Calls),0) AS 'Average Number Of Calls', ROUND(AVG(No_Of_Staff),0) AS 'Average Number Of Staff Available' FROM Fact_About_EmergencyCalls
+JOIN Station on Fact_About_EmergencyCalls.Station_Station_id = Station.Station_id
+JOIN Time_Of_Crime ON Fact_About_EmergencyCalls.Time_Of_Crime_Time_Of_Crime_id = Time_Of_Crime.Time_Of_Crime_id
+WHERE (Fact_About_EmergencyCalls.Station_Station_id = 3)
+GROUP BY Time_Of_Crime_Time_Of_Crime_id;
+
+SELECT Time_Of_Crime.Month, Station.Station, ROUND(AVG(No_Of_Calls),0) AS 'Average Number Of Calls', ROUND(AVG(No_Of_Staff),0) AS 'Average Number Of Staff Available' FROM Fact_About_EmergencyCalls
+JOIN Station on Fact_About_EmergencyCalls.Station_Station_id = Station.Station_id
+JOIN Time_Of_Crime ON Fact_About_EmergencyCalls.Time_Of_Crime_Time_Of_Crime_id = Time_Of_Crime.Time_Of_Crime_id
+WHERE (Fact_About_EmergencyCalls.Station_Station_id = 3)
+GROUP BY Time_Of_Crime.Month;
